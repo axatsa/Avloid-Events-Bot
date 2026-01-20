@@ -70,3 +70,48 @@ def get_reg_confirm_keyboard(lang, event_id):
         [InlineKeyboardButton(text=STRINGS[lang]["edit_phone_btn"], callback_data=f"edit_reg_phone_{event_id}")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+def get_admin_events_keyboard(events):
+    """Inline keyboard list of events for admin"""
+    buttons = []
+    for ev_id, cat, desc in events:
+        # Format: [Category] Description...
+        btn_text = f"[{cat}] {desc[:20]}..."
+        buttons.append([InlineKeyboardButton(text=btn_text, callback_data=f"admin_event_{ev_id}")])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+def get_event_manage_keyboard(lang, event_id):
+    buttons = [
+        [InlineKeyboardButton(text=STRINGS[lang]["edit_event"], callback_data=f"admin_edit_{event_id}")],
+        [InlineKeyboardButton(text=STRINGS[lang]["delete_event_btn"], callback_data=f"admin_del_ask_{event_id}")],
+        [InlineKeyboardButton(text=STRINGS[lang]["back_btn"], callback_data="admin_back_list")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+def get_delete_confirm_keyboard(lang, event_id):
+    buttons = [
+        [InlineKeyboardButton(text=STRINGS[lang]["confirm_delete_btn"], callback_data=f"admin_del_confirm_{event_id}")],
+        [InlineKeyboardButton(text=STRINGS[lang]["back_btn"], callback_data=f"admin_event_{event_id}")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+def get_event_edit_keyboard(lang, event_id, is_offline=False):
+    buttons = [
+        [InlineKeyboardButton(text=STRINGS[lang]["edit_img"], callback_data=f"edit_field_img_{event_id}")],
+        [InlineKeyboardButton(text=STRINGS[lang]["edit_desc"], callback_data=f"edit_field_desc_{event_id}")],
+        [InlineKeyboardButton(text=STRINGS[lang]["edit_time"], callback_data=f"edit_field_time_{event_id}")],
+        [InlineKeyboardButton(text=STRINGS[lang]["edit_date"], callback_data=f"edit_field_date_{event_id}")],
+        [InlineKeyboardButton(text=STRINGS[lang]["edit_capacity"], callback_data=f"edit_field_cap_{event_id}")]
+    ]
+    if is_offline:
+        buttons.append([InlineKeyboardButton(text=STRINGS[lang]["edit_location"], callback_data=f"edit_field_loc_{event_id}")])
+    
+    buttons.append([InlineKeyboardButton(text=STRINGS[lang]["back_btn"], callback_data=f"admin_event_{event_id}")])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+def get_back_keyboard(lang, callback_data):
+    buttons = [
+        [InlineKeyboardButton(text=STRINGS[lang]["back_btn"], callback_data=callback_data)]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+ 

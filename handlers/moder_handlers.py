@@ -98,6 +98,6 @@ async def check_participant(message: Message, state: FSMContext):
     
     # Ask if want to check another
     await message.answer(
-        "Введите другой номер для проверки или /moder для выхода\n"
-        "Enter another number to check or /moder to exit"
+        "Введите следующий номер для проверки"
+        "Enter next number to check"
     )

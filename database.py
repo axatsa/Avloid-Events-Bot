@@ -190,3 +190,39 @@ def get_all_events():
     events = cursor.fetchall()
     conn.close()
     return events
+
+def get_event_by_id(event_id):
+    conn = sqlite3.connect(DATABASE_NAME)
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT e.id, c.name, e.description, e.image_id, e.time_info, e.event_date, e.max_participants, e.location
+    FROM events e
+    JOIN categories c ON e.category_id = c.id
+    WHERE e.id = ?
+    ''', (event_id,))
+    event = cursor.fetchone()
+    conn.close()
+    return event
+
+def delete_event(event_id):
+    conn = sqlite3.connect(DATABASE_NAME)
+    cursor = conn.cursor()
+    # Delete registrations first to maintain integrity
+    cursor.execute("DELETE FROM registrations WHERE event_id = ?", (event_id,))
+    cursor.execute("DELETE FROM events WHERE id = ?", (event_id,))
+    conn.commit()
+    conn.close()
+
+def update_event_field(event_id, field, value):
+    # Whitelist allowed fields to prevent SQL injection
+    allowed_fields = ['description', 'image_id', 'time_info', 'event_date', 'max_participants', 'location']
+    if field not in allowed_fields:
+        return False
+        
+    conn = sqlite3.connect(DATABASE_NAME)
+    cursor = conn.cursor()
+    query = f"UPDATE events SET {field} = ? WHERE id = ?"
+    cursor.execute(query, (value, event_id))
+    conn.commit()
+    conn.close()
+    return True
